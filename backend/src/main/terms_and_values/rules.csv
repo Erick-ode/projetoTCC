@@ -1,0 +1,11 @@
+tecnica;tempo;custo;pessoas;imposicao;confiabilidade;padronizacao;produtividade
+entrevista;medio;medio;indi;medio;alta;nao;media
+observacao;longo;baixo;indOuGrupo;baixo;media;nao;baixa
+analiseDeProtocolo;medio;medio;indi;baixo;baixa;sim;baixa
+prototipacao;medio;alto;indOuGrupo;medio;alta;sim;alta
+cenarios;longo;alto;indOuGrupo;baixo;alta;sim;alta
+casoDeUso;longo;alto;indi;baixo;alta;sim;alta
+etnografia;longo;baixo;indOuGrupo;baixo;media;nao;baixa
+brainstorming;longo;medio;grupo;baixo;alta;nao;media
+jad;longo;alto;grupo;alto;alta;sim;alta
+questionarios;medio;baixo;indi;baixo;alta;nao;media
