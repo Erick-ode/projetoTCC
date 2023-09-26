@@ -11,6 +11,7 @@ class TestFuzzyStructure(unittest.TestCase):
         self.assertIsInstance(self.fuzzy_structure.consequent, ctrl.Consequent)
 
     def test_set_antecedents_returns_antecedents_type(self):
+        print(self.fuzzy_structure.antecedents)
         for antecedent in self.fuzzy_structure.antecedents:
             self.assertIsInstance(antecedent, ctrl.Antecedent)
 

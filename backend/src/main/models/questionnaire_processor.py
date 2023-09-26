@@ -1,25 +1,23 @@
-import random
-from backend.src.main.utils.settings import ANTECEDENTS_DATA
-from typing import Dict, List
-
-
 class QuestionnaireProcessor:
     def __init__(self, response):
-        self.data = response.get('attributes', {})
+        self.data = response
 
-        self.time = self.data.get('time', [])
-        self.cost = self.data.get('cost', [])
-        self.responsible = self.data.get('responsible', [])
-        self.explanation = self.data.get('explanation', [])
-        self.reliability = self.data.get('reliability', [])
-        self.parametrization = self.data.get('parametrization', [])
-        self.productivity = self.data.get('productivity', [])
+        self.time = self.data.get('time', None)
+        self.cost = self.data.get('cost', None)
+        self.responsible = self.data.get('responsible', None)
+        self.explanation = self.data.get('explanation', None)
+        self.reliability = self.data.get('reliability', None)
+        self.parametrization = self.data.get('parametrization', None)
+        self.productivity = self.data.get('productivity', None)
 
         self.input_values = {}
         self.process_time()
         self.process_cost()
         self.process_responsible()
         self.process_explanation()
+        self.process_reliability()
+        self.process_parametrization()
+        self.process_productivity()
 
     def process_time(self):
         answer = self.time[0].get('answer', '')
@@ -67,9 +65,9 @@ class QuestionnaireProcessor:
         answer_about_client = float(self.explanation[1].get('answer', ''))
 
         first_value = 0
-        if 'ferramenta automatizada' in answer_about_framework.lower:
+        if 'ferramenta automatizada' in [answer_about_framework]:
             first_value = 5.5
-        elif 'papel' in answer_about_framework.lower or 'diagrama' in answer_about_framework.lower:
+        elif 'papel' in [answer_about_framework] or 'diagrama' in [answer_about_framework]:
             first_value = 16
         else:
             first_value = 36.75
@@ -85,4 +83,45 @@ class QuestionnaireProcessor:
         self.input_values['explanation'] = (first_value + second_value) / 2
 
     def process_reliability(self):
-        pass
+        answer_about_level = self.reliability[0].get('answer', '')
+        answer_about_trusting = self.reliability[1].get('answer', '')
+
+        reliability_mapping = {
+            'senior_all_trust': 'high',
+            'senior_partially_trust': 'high',
+            'pleno_all_trust': 'high',
+            'senior_no_trust': 'medium',
+            'pleno_partially_trust': 'medium',
+            'junior_all_trust': 'medium',
+            'pleno_no_trust': 'low',
+            'junior_partially_trust': 'low',
+            'junior_no_trust': 'low'
+        }
+        user_answer_key = f'{answer_about_level}_{answer_about_trusting}'
+        if user_answer_key in reliability_mapping:
+            reliability = reliability_mapping[user_answer_key]
+        else:
+            reliability = None
+
+        values = {'high': 92.14, 'medium': 45.00, 'low': 15.31}
+        self.input_values['reliability'] = values[reliability]
+
+    def process_parametrization(self):
+        answer = self.parametrization[0].get('answer', '')
+
+        if answer == 'Sim':
+            self.input_values['parametrization'] = 2.5
+        else:
+            self.input_values['parametrization'] = 7.5
+
+    def process_productivity(self):
+        answer = self.productivity[0].get('answer', '')
+
+        if answer == 'Baixa':
+            self.input_values['productivity'] = 15.00
+        elif answer == 'Média':
+            self.input_values['productivity'] = 45.00
+        elif answer == 'Alta':
+            self.input_values['productivity'] = 75.00
+        else:
+            self.input_values['productivity'] = 00.00

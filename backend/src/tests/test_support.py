@@ -52,7 +52,7 @@ class TestUtils(unittest.TestCase):
 
     def test_set_sentences(self):
         sentences = set_sentences(DF_RULES)
-
+        print(sentences)
         self.assertIsNotNone(sentences)
 
     def test_find_value(self):
