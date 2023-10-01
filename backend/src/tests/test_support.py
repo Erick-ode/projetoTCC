@@ -1,6 +1,6 @@
 import unittest
-from backend.src.main.utils.settings import DF_TERMS, DF_RULES
-from backend.src.main.utils.support import *
+from ..main.utils.settings import DF_TERMS, DF_RULES
+from ..main.utils.support import *
 
 
 class TestUtils(unittest.TestCase):
@@ -52,7 +52,7 @@ class TestUtils(unittest.TestCase):
 
     def test_set_sentences(self):
         sentences = set_sentences(DF_RULES)
-        print(sentences)
+
         self.assertIsNotNone(sentences)
 
     def test_find_value(self):

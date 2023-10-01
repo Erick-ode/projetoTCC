@@ -1,5 +1,5 @@
 import unittest
-from backend.src.main.models.questionnaire_processor import QuestionnaireProcessor
+from ..main.models.questionnaire_processor import QuestionnaireProcessor
 
 
 class TestQuestionnaireProcessor(unittest.TestCase):

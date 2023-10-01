@@ -1,4 +1,4 @@
-from backend.src.main.utils.support import split_antecedents_names, set_terms_to_dictionary, create_clause, \
+from ..utils.support import split_antecedents_names, set_terms_to_dictionary, create_clause, \
     set_sentences, pd
 import os
 

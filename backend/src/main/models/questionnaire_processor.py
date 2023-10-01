@@ -44,7 +44,7 @@ class QuestionnaireProcessor:
 
         if percents['Sênior'] >= sum([percents['Pleno'], percents['Junior']]):
             self.input_values['cost'] = 180.00
-        elif percents['Pleno'] >= sum([percents['Pleno'], percents['Junior']]):
+        elif percents['Pleno'] >= sum([percents['Sênior'], percents['Junior']]):
             self.input_values['cost'] = 111.67
         else:
             self.input_values['cost'] = 40.00

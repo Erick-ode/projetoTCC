@@ -1,17 +1,20 @@
-from flask import Flask, request, jsonify, redirect, url_for
+from flask import request, jsonify
 from backend.src.main.models.fuzzy_simulation import FuzzySimulation
 from backend.src.main.models.fuzzy_structure import FuzzyStructure
 from backend.src.main.models.questionnaire_processor import QuestionnaireProcessor
+from backend.src.main.models.technic import Technic
+from app import create_app, db
 
-app = Flask(__name__)
+
+main = create_app()
 
 
-@app.route('/')
+@main.route('/')
 def hello_world():
-    return 'Olá mundo!'
+    return 'Hello world'
 
 
-@app.route('/processar_respostas', methods=['POST'])
+@main.route('/processar_respostas', methods=['POST'])
 def post_answers():
     data = request.get_json()
 
@@ -27,17 +30,28 @@ def post_answers():
     fuzzy_structure = FuzzyStructure()
     fuzzy_simulator = FuzzySimulation(time, cost, responsible, explanation, reliability, parametrization, productivity)
 
-    technic_result = fuzzy_simulator.calculate_fuzzy(fuzzy_structure.rules)
+    results = fuzzy_simulator.calculate_fuzzy(fuzzy_structure.rules)
+    technic_result = results[0]
+    coherence = results[1]
+
+    new_register = Technic(name=technic_result, coherence=coherence)
+
+    db.session.add(new_register)
+    db.session.commit()
 
     return jsonify({'technic_result': technic_result})
 
 
-@app.route('/retornar_tecnica', methods=['GET'])
+@main.route('/retornar_tecnica', methods=['GET'])
 def get_technic():
-    result = request.args.get('technic_result', '')
+    result = Technic.query.all()
 
     return f'Resultado: {result}'
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+
+    main.run(debug=True)
+
+
+

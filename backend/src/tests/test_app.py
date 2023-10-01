@@ -1,13 +1,13 @@
 import json
 
-from backend.src.main.app import app
+from main import main
 import unittest
 
 
 class TestApp(unittest.TestCase):
     def setUp(self):
-        app.testing = True
-        self.app = app.test_client()
+        main.testing = True
+        self.app = main.test_client()
 
     def test_root_source(self):
         response = self.app.get('/')

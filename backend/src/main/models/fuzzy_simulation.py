@@ -1,6 +1,8 @@
 from skfuzzy import control as ctrl
-from typing import List, Dict
-from backend.src.main.utils.settings import CONSEQUENT_DATA, ANTECEDENTS_DATA
+from typing import List
+from ..utils.settings import CONSEQUENT_DATA
+from ..utils.support import find_result
+from .rule_validator import RuleValidator
 
 
 class FuzzySimulation:
@@ -13,6 +15,9 @@ class FuzzySimulation:
         self.reliability = reliability
         self.parameterization = parameterization
         self.productivity = productivity
+        self.parameters = [time, cost, responsible, explanation, reliability, parameterization, productivity]
+        self.rule_validator = RuleValidator(self.parameters)
+        self.coherence = 0
 
     def calculate_fuzzy(self, rules: List[ctrl.Rule]):
         control = ctrl.ControlSystem(rules=rules)
@@ -26,15 +31,12 @@ class FuzzySimulation:
         simulator.input['padronizacao'] = self.parameterization
         simulator.input['produtividade'] = self.productivity
 
-        simulator.compute()
+        try:
+            simulator.compute()
+            self.coherence = 100
+        except ValueError:
+            self.rule_validator.reset_inputs(simulator)
+            self.coherence = self.rule_validator.coherence
+            simulator.compute()
 
-        return self.find_result(CONSEQUENT_DATA, simulator.output['tecnica'])
-
-    def validate_rule(self, value):
-        pass
-
-    @staticmethod
-    def find_result(items: Dict[str, List[float]], value: float) -> str:
-        for key, values in items.items():
-            if min(values) <= value <= max(values):
-                return key
+        return find_result(CONSEQUENT_DATA, simulator.output['tecnica']), self.coherence

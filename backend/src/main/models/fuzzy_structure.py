@@ -1,5 +1,5 @@
-from backend.src.main.utils.support import set_terms_to_dictionary, create_clause, create_multiple_rules
-from backend.src.main.utils.settings import CONSEQUENT, ANTECEDENTS_NAMES, LIMITS, DF_TERMS, SENTENCES
+from ..utils.support import set_terms_to_dictionary, create_clause, create_multiple_rules
+from ..utils.settings import CONSEQUENT, ANTECEDENTS_NAMES, LIMITS, DF_TERMS, SENTENCES
 
 
 class FuzzyStructure:

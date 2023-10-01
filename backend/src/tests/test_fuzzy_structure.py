@@ -1,6 +1,6 @@
 import unittest
-from backend.src.main.models.fuzzy_structure import FuzzyStructure
-from backend.src.main.utils.support import ctrl
+from ..main.models.fuzzy_structure import FuzzyStructure
+from ..main.utils.support import ctrl
 
 
 class TestFuzzyStructure(unittest.TestCase):
