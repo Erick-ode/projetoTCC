@@ -1,0 +1,163 @@
+/* Estilos para o container de perguntas */
+.question-container {
+    text-align: center;
+    max-width: 600px;
+    max-height: 600px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    flex-grow: 1;
+    margin: 0 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.question-container h2 {
+    font-size: 1.5rem;
+}
+
+.question-container p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+/* Estilos para as opções de resposta */
+.options {
+    text-align: left;
+}
+
+.options label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.options input[type="radio"] {
+    margin-right: 5px;
+}
+
+/* Estilos para as setas de navegação */
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+.navigation-buttons button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navigation-buttons button:hover {
+    background-color: #0056b3;
+}
+
+.finish-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.finish-button-container button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.finish-button-container button:hover {
+    background-color: #0056b3;
+}
+
+
+button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    margin: 8px;
+    cursor: pointer;
+    color: #007BFF;
+    background-color: transparent;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Estilização para o botão "Enviar Formulário" */
+button[type="submit"] {
+    background-color: #007BFF;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+/* Adicione essas classes ao seu arquivo CSS */
+.question-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+
+button:hover {
+    color: #007bff;
+    /* Cor de destaque ao passar o mouse */
+}
+
+/* Estilo para campos de tipo número */
+.number-input {
+    width: 80px; /* Largura ajustável conforme necessário */
+    padding: 5px;
+    font-size: 1rem; /* Tamanho da fonte personalizado */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    outline: none;
+  }
+  
+  /* Estilo para botão de incremento e decremento */
+  .number-input .number-control {
+    cursor: pointer;
+    font-size: 0.8rem; /* Tamanho da fonte personalizado para botões */
+    background-color: #007bff; /* Cor de fundo personalizada para os botões */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 8px;
+    margin: 0;
+    outline: none;
+  }
+  
+  /* Estilo para botão de incremento */
+  .number-input .number-control.increment {
+    margin-left: 5px;
+  }
+  
+  /* Estilo para botão de decremento */
+  .number-input .number-control.decrement {
+    margin-right: 5px;
+  }
+  
+
+  .number-input .number-control:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }

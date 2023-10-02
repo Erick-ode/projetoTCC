@@ -29,24 +29,12 @@ class QuestionnaireProcessor:
     def process_cost(self):
         answer = self.cost[0].get('answer', '')
 
-        pairs = answer.split(';')
-        people_in_team = {}
-        for pair in pairs:
-            name, value = pair.split(':')
-            people_in_team[name] = int(value)
-
-        count_members = sum(people_in_team.values())
-
-        percents = {}
-        for position, qtd in people_in_team.items():
-            percent = (qtd / count_members) * 100
-            percents[position] = percent
-
-        if percents['Sênior'] >= sum([percents['Pleno'], percents['Junior']]):
+        if answer == 'Maioria Sênior' or answer == 'Mais sêniors e plenos do que juniors':
             self.input_values['cost'] = 180.00
-        elif percents['Pleno'] >= sum([percents['Sênior'], percents['Junior']]):
+        elif (answer == 'Maioria Plenos' or answer == 'Mesma quantidade em todos os níveis'
+              or 'Mais sêniors e juniors do que plenos'):
             self.input_values['cost'] = 111.67
-        else:
+        elif answer == 'Maioria Juniors' or answer == 'Mais plenos e juniors do que sêniors':
             self.input_values['cost'] = 40.00
 
     def process_responsible(self):
@@ -55,7 +43,7 @@ class QuestionnaireProcessor:
 
         if answer_about_many_people == 1:
             self.input_values['responsible'] = 23.99
-        elif answer_about_many_people > 1 and answer_about_one_person.lower == 'não':
+        elif answer_about_many_people > 1 and str(answer_about_one_person).lower == 'não':
             self.input_values['responsible'] = 14.68
         else:
             self.input_values['responsible'] = 4.5
