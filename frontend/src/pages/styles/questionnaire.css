@@ -23,19 +23,25 @@
 }
 
 /* Estilos para as opções de resposta */
-.options {
-    text-align: left;
-}
+.select-input {
+    width: 325px; /* Largura ajustável conforme necessário */
+    padding: 5px;
+    font-size: 1rem; /* Tamanho da fonte personalizado */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    outline: none;
+  }
 
-.options label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-}
-
-.options input[type="radio"] {
-    margin-right: 5px;
-}
+  .text-input {
+    width: 350px; /* Largura ajustável conforme necessário */
+    padding: 5px;
+    font-size: 1rem; /* Tamanho da fonte personalizado */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    outline: none;
+  }
 
 /* Estilos para as setas de navegação */
 .navigation-buttons {

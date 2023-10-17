@@ -17,7 +17,7 @@ class FuzzySimulation:
         self.productivity = productivity
         self.parameters = [time, cost, responsible, explanation, reliability, parameterization, productivity]
         self.rule_validator = RuleValidator(self.parameters)
-        self.coherence = 0
+        self.confidence_level = 0
 
     def calculate_fuzzy(self, rules: List[ctrl.Rule]):
         control = ctrl.ControlSystem(rules=rules)
@@ -33,10 +33,10 @@ class FuzzySimulation:
 
         try:
             simulator.compute()
-            self.coherence = 100
+            self.confidence_level  = 100
         except ValueError:
             self.rule_validator.reset_inputs(simulator)
-            self.coherence = self.rule_validator.coherence
+            self.confidence_level  = self.rule_validator.coherence
             simulator.compute()
 
-        return find_result(CONSEQUENT_DATA, simulator.output['tecnica']), self.coherence
+        return find_result(CONSEQUENT_DATA, simulator.output['tecnica']), self.confidence_level 

@@ -1,92 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { fetchQuestionsFromBackend, postAnswersToBackend } from '../AppService';
+import { fetchRegistrationFromBackend, postRegistrationToBackend } from '../AppService';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import './styles/questionnaire.css'
+import { setSessionData } from '../Session'
 
 const answers_expecteds = {
-  time: [
+  role: [
     {
       question_id: 0,
       field_name: null,
-      answer: null,
-    },
+      answer: null
+    }
   ],
-  cost: [
+  experience: [
     {
       question_id: 1,
       field_name: null,
-      answer: null,
-    },
+      answer: null
+    }
   ],
-  responsible: [
+  technic: [
     {
       question_id: 2,
       field_name: null,
-      answer: null,
-    },
-    {
-      question_id: 3,
-      field_name: null,
-      answer: null,
-    },
-  ],
-  explanation: [
-    {
-      question_id: 4,
-      field_name: null,
-      answer: null,
-    },
-    {
-      question_id: 5,
-      field_name: null,
-      answer: null,
-    },
-  ],
-  reliability: [
-    {
-      question_id: 6,
-      field_name: null,
-      answer: null,
-    },
-    {
-      question_id: 7,
-      field_name: null,
-      answer: null,
-    },
-  ],
-  parametrization: [
-    {
-      question_id: 8,
-      field_name: null,
-      answer: null,
-    },
-  ],
-  productivity: [
-    {
-      question_id: 9,
-      field_name: null,
-      answer: null,
-    },
-  ],
+      answer: null
+    }
+  ]
 };
 
 
-function Questionnaire() {
+function Register() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState(answers_expecteds);
 
-
   useEffect(() => {
     loadQuestions();
-    if (answers === null) {
-      setAnswers(answers_expecteds);
-    }
   }, []);
 
   function loadQuestions() {
-    fetchQuestionsFromBackend()
+    fetchRegistrationFromBackend()
       .then((response) => {
         const loadedQuestions = response.data;
         setQuestions(loadedQuestions);
@@ -110,6 +64,7 @@ function Questionnaire() {
       }
     }
     setAnswers(updatedAnswers);
+
   };
 
   const handleNextQuestion = () => {
@@ -117,7 +72,6 @@ function Questionnaire() {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       console.log('Respostas:', answers);
-      sendAnswers();
     }
   };
 
@@ -128,14 +82,18 @@ function Questionnaire() {
   }
 
   function sendAnswers() {
-    postAnswersToBackend(answers)
+    console.log(answers)
+    postRegistrationToBackend(answers)
       .then((response) => {
         console.log('Resposta do servidor:', response.data);
+        setSessionData('userID', response.data.userID);
+        setSessionData('userName', response.data.userName);
       })
       .catch((error) => {
         console.error('Erro ao enviar respostas para o servidor:', error);
       });
   }
+
 
   return (
     <div className="question-nav">
@@ -148,9 +106,7 @@ function Questionnaire() {
           <p>{questions[currentQuestion].question}</p>
           {questions[currentQuestion].type === 'options' && (
             <select className='select-input'
-              value={answers[questions[currentQuestion].parameter].length > 1
-                ? answers[questions[currentQuestion].parameter][1].answer
-                : answers[questions[currentQuestion].parameter][0].answer}
+              value={answers[questions[currentQuestion].parameter][0].answer}
               onChange={(e) => handleAnswer(e.target.value)}
             >
               <option>...</option>
@@ -169,28 +125,18 @@ function Questionnaire() {
               value={answers[questions[currentQuestion].parameter][0].answer || ''}
               onChange={(e) => handleAnswer(e.target.value)} />
           )}
-
-          {questions[currentQuestion].type === 'number' && (
-            <input className='number-input'
-              type="number"
-              value={answers[questions[currentQuestion].parameter].length > 1
-                ? answers[questions[currentQuestion].parameter][1].answer
-                : answers[questions[currentQuestion].parameter][0].answer}
-              onChange={(e) => handleAnswer(e.target.value)} />
-          )}
-
         </div>
       ) : (
         <div>
-          <p>Questionário concluído!</p>
+          <p>Cadastramento concluído!</p>
         </div>
       )}
       {currentQuestion < questions.length - 1 ? (
         <button onClick={handleNextQuestion}><FaArrowRight /></button>
       ) : (
-        <Link to="/tecnica">
+        <Link to="/formulario">
           <div className="finish-button-container">
-            <button onClick={handleNextQuestion}>Finalizar questionário</button>
+            <button onClick={sendAnswers}>Iniciar questionário</button>
           </div>
         </Link>
       )}
@@ -198,4 +144,4 @@ function Questionnaire() {
   );
 }
 
-export default Questionnaire;
+export default Register;

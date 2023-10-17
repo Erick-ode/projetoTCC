@@ -52,40 +52,33 @@ class QuestionnaireProcessor:
         answer_about_framework = self.explanation[0].get('answer', '')
         answer_about_client = float(self.explanation[1].get('answer', ''))
 
-        first_value = 0
-        if 'ferramenta automatizada' in [answer_about_framework]:
-            first_value = 5.5
-        elif 'papel' in [answer_about_framework] or 'diagrama' in [answer_about_framework]:
-            first_value = 16
+        value = 0
+        if (answer_about_framework == 'Ferramenta automatizada' or answer_about_framework == 'Observação') and answer_about_client <= 5.5:
+            value = 5.5
+        elif answer_about_framework == 'Conversas' and (5.51 <= answer_about_client <= 16.1):
+            value = 16
         else:
-            first_value = 36.75
+            value = 36.75
 
-        second_value = 0
-        if answer_about_client <= 5.5:
-            second_value = 5.5
-        elif 5.51 <= answer_about_client <= 16.1:
-            second_value = 16
-        else:
-            second_value = 36.75
-
-        self.input_values['explanation'] = (first_value + second_value) / 2
+        self.input_values['explanation'] = value
 
     def process_reliability(self):
         answer_about_level = self.reliability[0].get('answer', '')
         answer_about_trusting = self.reliability[1].get('answer', '')
 
         reliability_mapping = {
-            'senior_all_trust': 'high',
-            'senior_partially_trust': 'high',
-            'pleno_all_trust': 'high',
-            'senior_no_trust': 'medium',
-            'pleno_partially_trust': 'medium',
-            'junior_all_trust': 'medium',
-            'pleno_no_trust': 'low',
-            'junior_partially_trust': 'low',
-            'junior_no_trust': 'low'
+            'Sênior_Muita_confiança': 'high',
+            'Sênior_Confio_parcialmente': 'high',
+            'Pleno_Muita_confiança': 'high',
+            'Sênior_Não_confio': 'medium',
+            'Pleno_Confio_parcialmente': 'medium',
+            'Junior_Muita_confiança': 'medium',
+            'Pleno_Não_confio': 'low',
+            'Junior_Confio_parcialmente': 'low',
+            'Junior_Não_confio': 'low'
         }
-        user_answer_key = f'{answer_about_level}_{answer_about_trusting}'
+        user_answer_key = f'{answer_about_level}_{str(answer_about_trusting).replace(" ", "_")}'
+        
         if user_answer_key in reliability_mapping:
             reliability = reliability_mapping[user_answer_key]
         else:
@@ -97,7 +90,7 @@ class QuestionnaireProcessor:
     def process_parametrization(self):
         answer = self.parametrization[0].get('answer', '')
 
-        if answer == 'Sim':
+        if answer == 'Métodos padronizados':
             self.input_values['parametrization'] = 2.5
         else:
             self.input_values['parametrization'] = 7.5

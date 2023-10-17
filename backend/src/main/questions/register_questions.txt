@@ -1,0 +1,3 @@
+0;Qual o seu cargo?;role;text
+1;Qual o seu nível de experiência?;experience;options;Sênior;Pleno;Junior
+2;Qual técnica você tem preferência por utilizar, com base nas suas repostas?;technic;options;Entrevista;Observação;Análise de protocolo;Prototipação;Cénarios;Casos de uso;Etnografia;Brainstorming;Jad;Questionários

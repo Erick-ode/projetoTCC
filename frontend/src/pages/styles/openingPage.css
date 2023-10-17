@@ -37,3 +37,15 @@ p {
 .btn:hover {
     background-color: #0056b3;
 }
+
+.topic-list {
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 18px;
+    color: #666;
+  }
+  
+  .topic-list li {
+    margin-bottom: 5px;
+  }
+
