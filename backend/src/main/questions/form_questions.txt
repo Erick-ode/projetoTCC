@@ -1,10 +1,10 @@
-0;Qual o tempo de desenvolvimento (em meses)?;time;number
-1;Como está distribuído o nível de pessoas da equipe?;cost;options;Maioria Sênior;Maioria Plenos;Maioria Juniors;Mais sêniors e plenos do que juniors;Mais sêniors e juniors do que plenos;Mais plenos e juniors do que sêniors;Mesma quantidade em todos os níveis
-2;Quantas pessoas participam do levantamento de requisitos?;responsible;number
-3;É possível apenas uma pessoa fazer?;responsible;options;Sim;Não
-4;Quais ferramentas prefere utilizar no levantamento de requisitos?;explanation;options;Ferramenta automatizada;Observação;Conversas;Workshops
-5;Quantas horas por semana o cliente precisa participar do projeto?;explanation;number
-6;Nível do aplicador da técnica?;reliability;options;Sênior;Pleno;Junior
-7;Nível de confiança na fonte de informações?;reliability;options;Muita confiança;Confio parcialmente;Não confio
-8;Opta por métodos padronizados ou aceita trabalhar com métodos dinâmicos?;parametrization;options;Métodos padronizados;Métodos dinâmicos
-9;Qual o nível de produtividade da equipe?;productivity;options;Alta;Média;Baixa
+0;Qual o tempo planejado para o desenvolvimento (em meses)?;time;number
+1;Em relação ao nível de experiência da equipe, como está distribuído?;cost;options;Maioria Sênior;Maioria Plenos;Maioria Juniors;Mais sêniors e plenos do que juniors;Mais sêniors e juniors do que plenos;Mais plenos e juniors do que sêniors;Mesma quantidade em todos os níveis
+2;Quantas pessoas são responsáveis pelo levantamento de requisitos?;responsible;number
+3;É possível apenas uma pessoa fazer o levantamento?;responsible;options;Sim;Não
+4;Quais ferramentas são utilizadas pela equipe para o levantamento de requisitos?;explanation;options;Ferramenta automatizada;Observação;Conversas;Workshops
+5;Quantas horas por semana, em média, o cliente será consultado?;explanation;number
+6;Nível de experiência do aplicador do levantamento de requisitos?;reliability;options;Sênior;Pleno;Junior
+7;O quanto você confia na fonte de informações;reliability;options;Muita confiança;Confio parcialmente;Não confio
+8;Tem preferência por métodos de levantamento de requisitos padronizados e com respostas objetivas ou aceita trabalhar com métodos mais dinâmicos e com respostas mais elaboradas?;parametrization;options;Métodos padronizados;Métodos dinâmicos
+9;Qual o nível de produtividade da equipe para atender os requisitos no prazo estabelecido?;productivity;options;Alta;Média;Baixa

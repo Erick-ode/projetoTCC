@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { fetchQuestionsFromBackend, postAnswersToBackend } from '../AppService';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import './styles/questionnaire.css'
+import './styles/questionnaire.css';
+import useAuth from '../hooks/useAuth';
 
 const answers_expecteds = {
   time: [
@@ -76,14 +77,17 @@ function Questionnaire() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState(answers_expecteds);
+  
+  const navigate = useNavigate();
 
+  const { user } = useAuth();
 
   useEffect(() => {
     loadQuestions();
     if (answers === null) {
       setAnswers(answers_expecteds);
     }
-  }, []);
+  }, [answers]);
 
   function loadQuestions() {
     fetchQuestionsFromBackend()
@@ -127,14 +131,17 @@ function Questionnaire() {
     }
   }
 
-  function sendAnswers() {
-    postAnswersToBackend(answers)
+  function sendAnswers() {    
+    postAnswersToBackend(answers, user)
       .then((response) => {
         console.log('Resposta do servidor:', response.data);
       })
       .catch((error) => {
         console.error('Erro ao enviar respostas para o servidor:', error);
       });
+      setTimeout(() => {
+        navigate("/tecnica");
+      }, 500);
   }
 
   return (
@@ -188,11 +195,9 @@ function Questionnaire() {
       {currentQuestion < questions.length - 1 ? (
         <button onClick={handleNextQuestion}><FaArrowRight /></button>
       ) : (
-        <Link to="/tecnica">
-          <div className="finish-button-container">
-            <button onClick={handleNextQuestion}>Finalizar questionário</button>
-          </div>
-        </Link>
+        <div className="finish-button-container">
+          <button onClick={handleNextQuestion}>Finalizar questionário</button>
+        </div>
       )}
     </div>
   );

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { fetchRegistrationFromBackend, postRegistrationToBackend } from '../AppService';
-import { Link } from 'react-router-dom';
+import { fetchRegistrationQuestionsFromBackend } from '../AppService';
+import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import './styles/questionnaire.css'
-import { setSessionData } from '../Session'
+import useAuth from '../hooks/useAuth';
 
 const answers_expecteds = {
   role: [
@@ -26,7 +26,8 @@ const answers_expecteds = {
       field_name: null,
       answer: null
     }
-  ]
+  ],
+  user_id: Math.floor(Math.random() * (Math.floor(1000) - Math.ceil(1) + 1)) + 1
 };
 
 
@@ -35,12 +36,17 @@ function Register() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState(answers_expecteds);
 
+  const { signup } = useAuth();
+  const { signin } = useAuth();
+  
+  const navigate = useNavigate();
+
   useEffect(() => {
     loadQuestions();
   }, []);
 
   function loadQuestions() {
-    fetchRegistrationFromBackend()
+    fetchRegistrationQuestionsFromBackend()
       .then((response) => {
         const loadedQuestions = response.data;
         setQuestions(loadedQuestions);
@@ -82,66 +88,67 @@ function Register() {
   }
 
   function sendAnswers() {
-    console.log(answers)
-    postRegistrationToBackend(answers)
-      .then((response) => {
-        console.log('Resposta do servidor:', response.data);
-        setSessionData('userID', response.data.userID);
-        setSessionData('userName', response.data.userName);
-      })
-      .catch((error) => {
-        console.error('Erro ao enviar respostas para o servidor:', error);
-      });
+    const updatedAnswers = { ...answers };
+  
+    
+      signup(updatedAnswers);
+      
+      setTimeout(() => {
+        signin(updatedAnswers);
+        
+        navigate("/formulario");
+      }, 500);
   }
+  
 
 
   return (
-    <div className="question-nav">
-      <button onClick={goToPreviousQuestion} disabled={currentQuestion === 0}>
-        <FaArrowLeft />
-      </button>
-      {currentQuestion < questions.length ? (
-        <div className='question-container'>
-          <h2>Pergunta {currentQuestion + 1}</h2>
-          <p>{questions[currentQuestion].question}</p>
-          {questions[currentQuestion].type === 'options' && (
-            <select className='select-input'
-              value={answers[questions[currentQuestion].parameter][0].answer}
-              onChange={(e) => handleAnswer(e.target.value)}
-            >
-              <option>...</option>
-              {questions[currentQuestion].options.map((option, index) => (
-                <option key={index} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          )}
+  <div className="question-nav">
+    <button onClick={goToPreviousQuestion} disabled={currentQuestion === 0}>
+      <FaArrowLeft />
+    </button>
+    {currentQuestion < questions.length ? (
+      <div className='question-container'>
+        <h2>Pergunta {currentQuestion + 1}</h2>
+        <p>{questions[currentQuestion].question}</p>
+        {questions[currentQuestion].type === 'options' && (
+          <select className='select-input'
+            value={answers[questions[currentQuestion].parameter][0].answer}
+            onChange={(e) => handleAnswer(e.target.value)}
+          >
+            <option>...</option>
+            {questions[currentQuestion].options.map((option, index) => (
+              <option key={index} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        )}
 
-          {questions[currentQuestion].type === 'text' && (
-            <input
-              type="text"
-              className='text-input'
-              value={answers[questions[currentQuestion].parameter][0].answer || ''}
-              onChange={(e) => handleAnswer(e.target.value)} />
-          )}
-        </div>
-      ) : (
-        <div>
-          <p>Cadastramento concluído!</p>
-        </div>
-      )}
+        {questions[currentQuestion].type === 'text' && (
+          <input
+            type="text"
+            className='text-input'
+            value={answers[questions[currentQuestion].parameter][0].answer || ''}
+            onChange={(e) => handleAnswer(e.target.value)} />
+        )}
+      </div>
+    ) : (
+      <div>
+        <p>Cadastramento concluído!</p> 
+      </div>
+    )}
+
+    <div className="button-container">
       {currentQuestion < questions.length - 1 ? (
         <button onClick={handleNextQuestion}><FaArrowRight /></button>
       ) : (
-        <Link to="/formulario">
-          <div className="finish-button-container">
-            <button onClick={sendAnswers}>Iniciar questionário</button>
-          </div>
-        </Link>
+        <button onClick={sendAnswers}>Iniciar questionário</button>
       )}
     </div>
-  );
+  </div>
+);
+
 }
 
 export default Register;

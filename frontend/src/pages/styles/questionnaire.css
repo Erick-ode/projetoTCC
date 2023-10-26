@@ -140,7 +140,7 @@ button:hover {
   }
   
   /* Estilo para botão de incremento e decremento */
-  .number-input .number-control {
+  .number-input .number-control .feedback-container .feedback-textarea {
     cursor: pointer;
     font-size: 0.8rem; /* Tamanho da fonte personalizado para botões */
     background-color: #007bff; /* Cor de fundo personalizada para os botões */
@@ -167,3 +167,40 @@ button:hover {
     background-color: #ccc;
     cursor: not-allowed;
   }
+
+  .button-container {
+    text-align: center; /* Centraliza os botões horizontalmente */
+    margin-top: 20px; /* Define uma margem superior para separar os botões das perguntas */
+  }
+  
+  .button-container button {
+    margin: 10px; /* Define uma margem entre os botões, ajuste conforme necessário */
+    padding: 10px 20px; /* Define um preenchimento interno nos botões */
+    background-color: #007bff; /* Cor de fundo dos botões */
+    color: #fff; /* Cor do texto dos botões */
+    border: none; /* Remove as bordas dos botões */
+    border-radius: 5px; /* Adiciona bordas arredondadas aos botões */
+    cursor: pointer; /* Altera o cursor ao pairar sobre os botões */
+  }
+  
+  .button-container button:hover {
+    background-color: #0056b3; /* Cor de fundo alterada ao pairar sobre os botões */
+  }
+  
+
+  @media (max-width: 768px) {
+    .question-nav {
+        font-size: 14px; /* Reduza o tamanho da fonte */
+        /* Outros estilos específicos para dispositivos móveis */
+    }
+    .question-container {
+        padding: 10px; /* Adicione algum espaço interno */
+    }
+    .select-input,
+    .text-input {
+        width: 100%; /* Faça os inputs ocuparem toda a largura */
+    }
+    .finish-button-container {
+        text-align: center; /* Centralize o botão */
+    }
+}

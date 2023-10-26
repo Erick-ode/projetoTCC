@@ -26,8 +26,8 @@ def load_questions():
             }
             questions.append(question)
         return jsonify(questions)
-    
-    
+
+
 @main.route("/carregar_perguntas_registro")
 def load_user_questions():
     file_path = os.path.abspath("backend/src/main/questions/register_questions.txt")
@@ -54,10 +54,14 @@ def post_answerer():
         role = data.get("role")[0].get("answer")
         experience = data.get("experience")[0].get("answer")
         chosen_technic = data.get("technic")[0].get("answer")
-
-        print(role, " ", experience, " ", chosen_technic)
-
-        new_person = Person(role=role, experience=experience, chosen_technic=chosen_technic)
+        user_id = data.get("user_id")
+        
+        new_person = Person(
+            user_id=user_id,
+            role=role,
+            experience=experience,
+            chosen_technic=chosen_technic,
+        )
 
         db.session.add(new_person)
         db.session.commit()
@@ -67,8 +71,8 @@ def post_answerer():
         return jsonify({"error": str(e)}), 500
 
 
-@main.route("/processar_respostas", methods=["POST"])
-def post_answers():
+@main.route("/processar_respostas/<int:user_id>", methods=["POST"])
+def post_answers(user_id):
     data = request.get_json()
 
     questionnaire = QuestionnaireProcessor(data)
@@ -87,11 +91,11 @@ def post_answers():
 
     results = fuzzy_simulator.calculate_fuzzy(fuzzy_structure.rules)
     technic_result = results[0]
-    confidence_level  = results[1]
+    confidence_level = results[1]
 
-    person_id = len(Person.query.all())
-
-    new_register = Result(name=technic_result, coherence=confidence_level, person_id=person_id, answers=data)
+    new_register = Result(
+        name=technic_result, coherence=confidence_level, person_id=user_id, answers=data
+    )
 
     db.session.add(new_register)
     db.session.commit()
@@ -99,23 +103,91 @@ def post_answers():
     return jsonify({"technic_result": technic_result})
 
 
-@main.route("/retornar_tecnica", methods=["GET"])
+@main.route("/adicionar_feedback/<int:user_id>", methods=["POST"])
+def adicionar_feedback(user_id):
+    try:
+        data = request.get_json()
+        feedback = data.get("feedback")
+        user = Person.query.filter_by(user_id=user_id).first()
+
+        if user:
+            user.feedback = feedback
+            db.session.commit()
+            return jsonify({"message": "Feedback adicionado com sucesso."}), 200
+        else:
+            return jsonify({"error": "Usuário não encontrado."}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@main.route("/retornar_resultados", methods=["GET"])
 def get_all_technics():
     results = Result.query.all()
 
     technic_list = [
-        {"id": result.id, "name": result.name, "confidence_level": result.confidence_level,  "Pessoa": result.person_id, "Respostas": result.answers}
+        {
+            "id": result.id,
+            "name": result.name,
+            "confidence_level": result.confidence_level,
+            "Pessoa": result.person_id,
+            "Respostas": result.answers,
+        }
         for result in results
     ]
 
     return jsonify(technic_list)
 
 
-@main.route("/retornar_tecnica/<int:id>", methods=["GET"])
-def get_technic(id):
-    result = Result.query.get(id)
+@main.route("/retornar_resultados/<int:user_id>", methods=["GET"])
+def get_technic(user_id):
+    result = Result.query.filter_by(person_id=user_id).first()
+    
+    response = jsonify(
+        {
+            "Técnica": result.name,
+            "Coerência": result.confidence_level,
+            "Respostas": result.answers,
+        }
+    )
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    
+    return response
 
-    return jsonify({"Técnica": result.name, "Coerência": result.confidence_level})
+
+@main.route("/retornar_pessoas", methods=["GET"])
+def get_people():
+    results = Person.query.all()
+
+    technic_list = [
+        {
+            "id": result.id,
+            "role": result.role,
+            "experience": result.experience,
+            "chosen_technic": result.chosen_technic,
+            "user_id": result.user_id,
+        }
+        for result in results
+    ]
+
+    return jsonify(technic_list)
+
+
+@main.route("/retornar_pessoas/<int:user_id>", methods=["GET"])
+def get_person(user_id):
+    result = Person.query.filter_by(user_id=user_id).first()
+
+    if result:
+        return jsonify(
+            {
+                "Cargo": result.role,
+                "Experiência": result.experience,
+                "user_id": result.user_id,
+                "feedback": result.feedback
+            }
+        )
+    else:
+        return jsonify({"error": "Usuário não encontrado"}), 404
 
 
 @main.route("/apagar_registro/<int:id>", methods=["DELETE"])
@@ -130,24 +202,24 @@ def delete_register(id):
         return jsonify({"error": f"Registro com ID {id} não encontrado"}), 404
 
 
-@main.route("/retornar_pessoas", methods=["GET"])
-def get_people():
-    results = Person.query.all()
+@main.route("/deletar_todos_os_respondentes", methods=["DELETE"])
+def delete_all_people():
+    try:
+        people = Person.query.all()
 
-    technic_list = [
-    {"id": result.id, "role": result.role, "experience": result.experience, "chosen_technic": result.chosen_technic}
-        for result in results
-    ]
+        for person in people:
+            db.session.delete(person)
+
+        db.session.commit()
+
+        return (
+            jsonify({"message": "Todos os respondentes foram excluídos com sucesso."}),
+            200,
+        )
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
-    return jsonify(technic_list)
-
-@main.route("/retornar_pessoa/<int:id>", methods=["GET"])
-def get_person(id):
-    result = Person.query.get(id)
-
-    return jsonify({"Cargo": result.role, "Experiência": result.experience, "ID": result.id })
-
-
-if __name__ == "__main__":
-    main.run(debug=True)
+# if __name__ == "__main__":
+#     main.run(debug=True)

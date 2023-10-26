@@ -21,9 +21,11 @@ class Result(db.Model):
 
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
     role = db.Column(db.String(100))
     experience = db.Column(db.String(100))
     chosen_technic = db.Column(db.String(50))
+    feedback = db.Column(db.Text)
     technic = db.relationship("Result", backref="person", uselist=False, lazy=True)
 
 
